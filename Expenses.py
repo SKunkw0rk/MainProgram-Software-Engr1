@@ -37,3 +37,5 @@ def select_category():
     print('Selected category: ' + current_category)
 
 select_category()
+
+#work in progress
