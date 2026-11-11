@@ -2,7 +2,8 @@
 
 
 '''
-    This module contains the Expense class which is used to represent an expense with its details such as category, amount, and date. 
+    This module contains the Expense class which is used to represent an expense with its details such as category, amount, and description. This helps users track
+    their finances and budget accordingly.
 
 '''
 
@@ -12,6 +13,9 @@ File_name= 'Expenses.json'
 
 
 class ExpenseTracker:
+    '''
+        This class has methods to help a user keep track of their expenses, add new expense categories, enter expense amount, and leave an optional description. 
+    '''
     def __init__(self):
 
         self.categories = ['Gas', 'Food', 'Rent', 'Utilities', 'Entertainment', 'Miscellaneous']    # List of possible expense categories
@@ -26,11 +30,14 @@ class ExpenseTracker:
 
 
     def menu_options(self):
+        '''
+            A premade list of possible categories a user might need right out the box.
+        '''
 
         print('')
-        print('1: Add expense')
-        print('2: View expenses')
-        print('3: Return to main page')
+        print('1: Add Expense   (Record and categorize your spending.)')
+        print('2: View Expenses (See past spending) ')
+        print('3: Return to Main Page')
 
     def select_category(self):
         '''
@@ -56,7 +63,7 @@ class ExpenseTracker:
                     print('Enter number between 1 and ' + str(num + 1) + '.')
             except ValueError:
                 print('Please enter valid option.')
-
+        print('')
         if usr_selects == num + 1:
             self.current_category = ''
             print('Operation Cancelled')
@@ -82,6 +89,7 @@ class ExpenseTracker:
         '''
             This methods functionality is to let the user add expenses to a category. It saves this information in a dictionary which is then stored in a list.
         '''
+        print('Adding an expense takes 3 steps: Select Category, Input Amount, Optional Description.')
         self.select_category()
 
         if self.current_category == '':
@@ -116,6 +124,7 @@ class ExpenseTracker:
         '''
             This methods functionality opens writes to a file to save the users data.
         '''
+
         file = open(File_name, 'w')
         json.dump(self.expenses, file)
         file.close()
@@ -179,4 +188,4 @@ class ExpenseTracker:
 
 if __name__ == '__main__':
     money_tracker = ExpenseTracker()
-    money_tracker.program_process() 
+    money_tracker.program_process()
