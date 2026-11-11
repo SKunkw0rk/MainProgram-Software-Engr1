@@ -36,7 +36,6 @@ class ExpenseTracker:
         '''
             This method's functionality allows the user to select expense categories.
         '''
-
         print('Select a category: ')
         num = 1
 
@@ -46,16 +45,34 @@ class ExpenseTracker:
         print(str(num) + '. Create a new category')
         print(str(num + 1) + '. Quit')
 
-        usr_selects = int(input('Enter category number: '))
+        invalid_input = False
+
+        while not invalid_input:
+            try:
+                usr_selects = int(input('Enter category number: '))
+                if usr_selects >= 1 and usr_selects <= num + 1:
+                    invalid_input = True
+                else:
+                    print('Enter number between 1 and ' + str(num + 1) + '.')
+            except ValueError:
+                print('Please enter valid option.')
 
         if usr_selects == num + 1:
             self.current_category = ''
             print('Operation Cancelled')
         elif usr_selects == num:
-            self.new_category = input('New category: ')
-            self.categories.append(self.new_category)
-            self.current_category = self.new_category
-            print('Selected Category: ' + self.current_category)
+            new_category = input('Enter a new category or type "back" to return to category listing: ').strip()
+
+            while new_category == '':
+                print('New category cannot be empty')
+                new_category = input('Enter a new category or type "back" to return to category listing: ').strip()
+            if new_category.lower() == 'back':
+                self.select_category()
+            else:
+                self.new_category = new_category
+                self.categories.append(self.new_category)
+                self.current_category = self.new_category
+                print('Selected Category: ' + self.current_category)
         else:
             self.current_category = self.categories[usr_selects - 1]
             print('Selected Category: ' + self.current_category)
@@ -70,8 +87,18 @@ class ExpenseTracker:
         if self.current_category == '':
             return
 
-        comma_amount = input('Amount: $')
-        self.amount = float(comma_amount.replace(',',''))
+        valid_expense = False # making sure the usr input is a vali number
+        while not valid_expense:
+            coma = input('Amount: $')
+            try:
+                self.amount = float(coma.replace(',', ''))
+                if self.amount > 0 :
+                    valid_expense = True
+                else:
+                    print('Amount must be greater than 0')
+            except ValueError:
+                print('Please enter valid amount')
+
         self.descript = input('Description: ')
 
         expense = {'category': self.current_category, 'amount': self.amount, 'descript': self.descript}
@@ -105,7 +132,7 @@ class ExpenseTracker:
         except json.JSONDecodeError:
             self.expenses = []
         for expense in self.expenses:
-            if expense['category'] not in self.categories:
+            if expense['category'] != '' and expense['category'] not in self.categories: # skips empty categories
                 self.categories.append(expense['category'])
 
     def get_total_history(self, category):
